@@ -22,8 +22,8 @@
 
 enum layers{
   WIN_BASE,
-  WIN_SPC,
-  WIN_FN,
+  WIN_FN1,
+  WIN_FN2,
   GAME_BASE,
   GAME_FN
 };
@@ -95,10 +95,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRV,         KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,            KC_PGUP,
         KC_TAB,         KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,                      KC_PGDN,
         LCTL_T(KC_ESC), KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,    KC_NUHS,  KC_ENT,             KC_HOME,
-        KC_LSFT,        KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,
-        MO(WIN_FN),     KC_LALT,  MO(WIN_SPC),                            KC_SPC,                              MO(WIN_SPC), KC_LGUI, MO(WIN_FN),  KC_LEFT,  KC_DOWN,  KC_RGHT),
+        KC_LSPO,        KC_NUBS,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSPC,  KC_UP,
+        MO(WIN_FN2),    KC_LALT,  MO(WIN_FN1),                            KC_SPC,                              MO(WIN_FN1), KC_LGUI, MO(WIN_FN2), KC_LEFT,  KC_DOWN,  KC_RGHT),
 
-    [WIN_SPC] = LAYOUT_iso_83(
+    [WIN_FN1] = LAYOUT_iso_83(
          _______,       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,  _______,            _______,
          _______,       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,  _______,            _______,
          _______,       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______, XP(AO, AO_C), _______,                     _______,
@@ -106,7 +106,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
          _______,       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,              _______,  _______,
          _______,       _______,  _______,                                _______,                                _______,  _______,    _______,  _______,  _______,  _______),
 
-    [WIN_FN] = LAYOUT_iso_83(
+    [WIN_FN2] = LAYOUT_iso_83(
          _______,       KC_BRID,  KC_BRIU,  KC_TASK,  KC_FLXP,  RGB_VAD,  RGB_VAI,  KC_MPRV,  KC_MPLY,  KC_MNXT,  KC_MUTE,  KC_VOLD,    KC_VOLU,  EE_CLR,            QK_BOOT,
          _______,       _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,  _______,    _______,  _______,            _______,
          RGB_TOG,       RGB_MOD,  RGB_VAI,  RGB_HUI,  RGB_SAI,  RGB_SPI,  _______,  _______,  _______,  _______,  _______, XP(AO, AO_C), _______,                     _______,
@@ -195,9 +195,11 @@ bool dip_switch_update_user(uint8_t index, bool active) {
     if (index == 0) {
         if (active) {
             default_layer_set(1UL << GAME_BASE);
+            combo_disable();
             color_layer_set(HS_GAME);
         } else {
             default_layer_set(1UL << WIN_BASE);
+            combo_enable();
             color_layer_set(HS_WIN);
         }
         return false;
@@ -241,3 +243,24 @@ void leader_start(void) {
 void leader_end() {
     color_layer_restore();
 }
+
+
+// Combos
+enum combos {
+  DF_ENTER,
+  SD_BSPC,
+  FG_DEL,
+  ESCDEL_EECLR,
+};
+
+const uint16_t PROGMEM df_combo[] = {KC_D, KC_F, COMBO_END};
+const uint16_t PROGMEM sd_combo[] = {KC_S, KC_D, COMBO_END};
+const uint16_t PROGMEM fg_combo[] = {KC_F, KC_G, COMBO_END};
+const uint16_t PROGMEM escdel_combo[] = {KC_ESC, KC_ENT, COMBO_END};
+
+combo_t key_combos[COMBO_COUNT] = {
+  [DF_ENTER] = COMBO(df_combo, KC_ENT),
+  [SD_BSPC] = COMBO(sd_combo, KC_BSPC),
+  [FG_DEL] = COMBO(fg_combo, KC_DEL),
+  [ESCDEL_EECLR] = COMBO(escdel_combo, EE_CLR),
+};

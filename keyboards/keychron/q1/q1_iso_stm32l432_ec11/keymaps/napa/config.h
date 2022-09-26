@@ -10,7 +10,7 @@
 
 // Home row mods
 // Configure the global tapping term (default: 200ms)
-#define TAPPING_TERM 175
+#define TAPPING_TERM 150
 // Prevent normal rollover on alphas from accidentally triggering mods.
 #define IGNORE_MOD_TAP_INTERRUPT
 // Enable rapid switch from tap to hold, disables double tap hold auto-repeat.
@@ -18,3 +18,7 @@
 
 // Caps words
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+
+// Combos
+#define COMBO_COUNT 4
+#define COMBO_TERM 30
